@@ -1,0 +1,18 @@
+{
+  "name": "sms-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "api": "node ./app/server.js"
+  },
+  "keywords": [],
+  "author": "Abass Ade",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "nexmo": "^2.4.1",
+    "restify": "^8.0.0",
+    "winston": "^3.2.1"
+  }
+}
