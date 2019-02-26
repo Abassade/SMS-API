@@ -21,6 +21,9 @@ class SMS {
         number.length === 13){
             return true;
         }
+        if(number.includes("+") && number.length === 14){
+            return true;
+        }
         return false;
     }
 
@@ -28,6 +31,18 @@ class SMS {
     * @param phoneNumber sanitize number
     */
     sanitizedNumber(phoneNumber){
+        if(phoneNumber.length > 1 && typeof(phoneNumber)  === Array){
+            let sanitizedPhoneNumber = [];
+            phoneNumber.forEach(async element => {
+                if(element.startsWith("+")){
+                   await sanitizedPhoneNumber.push(element.replace("+", ""));
+                    return sanitizedPhoneNumber;
+                }
+                else{
+                    return phoneNumber;
+                }
+            });
+        }
         let number = phoneNumber.toString().trim();
         if(number.startsWith("+")){
             return number.replace("+", "");
@@ -52,8 +67,8 @@ class SMS {
                     }
                 }
                 else{
-                    this.logger.info("something went wrong");
-                    reject("Something went wrong");
+                    this.logger.info(err);
+                    reject(err);
                 }
                 });
                 
@@ -76,16 +91,19 @@ class SMS {
                 number = number.startsWith('0') ? number.replace('0', '234') : number;
                 
                 nexmo.message.sendSms(senderName, number, message, (err, result) => {
-                if (err) this.logger.info.log(err);
-                this.logger.info.log(result);
-
-                // after the message has been successfully sent to the last number, send a server response
-                if(i === phoneNumbers.length - 1){
-                    console.log('message sent');
-                    resolve("Message sent");
-                    // You can now return server response.
-                }
-                reject("Something went wrong");
+                    if (err){
+                        this.logger.info(err);
+                        reject(err);
+                    }
+                    //resolve(result);
+                    //after the message has been successfully sent to the last number, send a server response
+                    if(i === phoneNumbers.length - 1){
+                        resolve(result);
+                        this.logger.info(result);
+                    }
+                    else{
+                        this.logger.info("something wierld happened");
+                    }
                 });
             }
         });
